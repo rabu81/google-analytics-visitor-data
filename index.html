@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Parse Google Analytics Data</title>
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+</head>
+
+<body>
+
+<form action="/action" method="post" accept-charset="utf-8">
+
+
+
+	<!--
+		YOUR FORM FIELDS HERE!!!
+	-->
+
+
+
+	<!--Important: list of input fields-->
+	<input type="hidden" name="medium" id="medium" value="" />
+	<input type="hidden" name="source" id="source" value="" />
+	<input type="hidden" name="content" id="content" value="" />
+	<input type="hidden" name="campaign" id="campaign" value="" />
+	<input type="hidden" name="term" id="term" value="" />
+	<input type="hidden" name="adwords_click_id" id="adwords_click_id" value="" />
+	<input type="hidden" name="total_sessions" id="total_sessions" value="" />
+	<input type="hidden" name="session_pageviews" id="session_pageviews" value="" />
+	<input type="hidden" name="first_session" id="first_session" value="" />
+	<input type="hidden" name="last_session" id="last_session" value="" />
+	<input type="hidden" name="this_session" id="this_session" value="" />
+
+
+
+	<button type="submit">Submit</button>
+
+
+
+</form>
+
+<script type="text/javascript">
+
+/*
+ * readCookie function via http://www.quirksmode.org/js/cookies.html
+ */
+function readCookie(name) {
+	var nameEQ = name + "=";
+	var ca = document.cookie.split(';');
+	for(var i=0;i < ca.length;i++) {
+		var c = ca[i];
+		while(c.charAt(0)==' ') c = c.substring(1,c.length);
+		if(c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	}
+	return null;
+}
+
+
+var utmz = readCookie('__utmz');
+
+if(utmz != null) {
+	var vals = (function() {
+		var pairs = utmz.split('.').slice(4).join('.').split('|');
+		var ga = {};
+		for(var i = 0; i < pairs.length; i++) {
+			var temp = pairs[i].split('=');
+			ga[temp[0]] = temp[1];
+		}
+		return ga;
+	})();
+	var visits = readCookie('__utma').split('.');
+	var pageviews = readCookie('__utmb').split('.')[1];
+
+	$("#medium").val(vals.utmcmd);
+	$("#source").val(vals.utmcsr);
+	$("#content").val(vals.utmcct);
+	$("#campaign").val(vals.utmccn);
+	$("#term").val(vals.utmctr);
+	$("#adwords_click_id").val(vals.utmgclid);
+	$("#total_sessions").val(visits.pop());
+	$("#session_pageviews").val(pageviews);
+	$("#first_session").val(new Date(visits[2]*1000));
+	$("#last_session").val(new Date(visits[3]*1000));
+	$("#this_session").val(new Date(visits[4]*1000));
+}
+</script>
+
+
+
+<!--
+	YOUR GOOGLE ANALYTICS TRACKING SCRIPT HERE
+-->
+
+
+
+</body>
+</html>
+
+
+
+
+
+
